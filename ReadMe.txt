@@ -5,7 +5,7 @@ http://blog.coolsoftware.ru/
 
 LockLib - C++ library that contains lock objects used to synchronize access to shared resources in muilti-threaded application for Windows.
 
-LockLib - C++ библиотека, содержащая объекты для синхронизации доступа к разделяемым ресурсам в многопоточном Winsows-приложении.
+LockLib - C++ библиотека, содержащая объекты для синхронизации доступа к разделяемым ресурсам в многопоточном Windows-приложении.
 
 VLock - позволяет организовать монопольный доступ к ресурсу ("обертка" над CRITICAL_SECTION).
 
