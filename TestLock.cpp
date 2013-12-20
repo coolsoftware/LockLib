@@ -60,11 +60,14 @@ unsigned int __stdcall TestLockThreadProc(void * lpParam)
 		return 0;
 	}
 	LOGDT("Thread %i (%d) Locking...", ti->nThread, ti->hThread);
-	lock.Lock(1, &ti->lThreadLock);
-	LOGDT("Thread %i (%d) Locked.", ti->nThread, ti->hThread);
-	::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
-	lock.Unlock(&ti->lThreadLock);
-	LOGDT("Thread %i (%d) Unlocked.", ti->nThread, ti->hThread);
+	//lock.Lock(1, &ti->lThreadLock);
+	{
+		VLockPtr plock(&lock, 1, &ti->lThreadLock);
+		LOGDT("Thread %i (%d) Locked.", ti->nThread, ti->hThread);
+		::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
+	}
+	//lock.Unlock(&ti->lThreadLock);
+	LOGDT("Thread %i (%d) Completed.", ti->nThread, ti->hThread);
 	return 0;
 }
 
@@ -80,13 +83,15 @@ unsigned int __stdcall TestReadLockThreadProc(void * lpParam)
 		LOGERRDT("ThreadInfo is empty");
 		return 0;
 	}
-	LOGDT("Thread %i (%d) Locking for Read...", ti->nThread, ti->hThread);
-	rwlock.LockRead(1, &ti->lThreadLock);
-	LOGDT("Thread %i (%d) Locked for Read.", ti->nThread, ti->hThread);
-	::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
-	LOGDT("Thread %i (%d) UnLocking for Read...", ti->nThread, ti->hThread);
-	rwlock.Unlock(&ti->lThreadLock);
-	LOGDT("Thread %i (%d) Read Unlocked.", ti->nThread, ti->hThread);
+	LOGDT("Read Thread %i (%d) Locking...", ti->nThread, ti->hThread);
+	//rwlock.LockRead(1, &ti->lThreadLock);
+	{
+		VReadLockPtr plock(&rwlock, 2, &ti->lThreadLock);
+		LOGDT("Read Thread %i (%d) Locked.", ti->nThread, ti->hThread);
+		::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
+	}
+	//rwlock.Unlock(&ti->lThreadLock);
+	LOGDT("Read Thread %i (%d) Completed.", ti->nThread, ti->hThread);
 	return 0;
 }
 
@@ -98,13 +103,15 @@ unsigned int __stdcall TestWriteLockThreadProc(void * lpParam)
 		LOGERRDT("ThreadInfo is empty");
 		return 0;
 	}
-	LOGDT("Thread %i (%d) Locking for Write...", ti->nThread, ti->hThread);
-	rwlock.LockWrite(1, &ti->lThreadLock);
-	LOGDT("Thread %i (%d) Locked for Write.", ti->nThread, ti->hThread);
-	::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
-	LOGDT("Thread %i (%d) UnLocking for Write...", ti->nThread, ti->hThread);
-	rwlock.Unlock(&ti->lThreadLock);
-	LOGDT("Thread %i (%d) Write Unlocked.", ti->nThread, ti->hThread);
+	LOGDT("Write Thread %i (%d) Locking...", ti->nThread, ti->hThread);
+	//rwlock.LockWrite(3, &ti->lThreadLock);
+	{
+		VWriteLockPtr plock(&rwlock, 3, &ti->lThreadLock);
+		LOGDT("Write Thread %i (%d) Locked.", ti->nThread, ti->hThread);
+		::WaitForSingleObject(hExitEvent, TEST_LOCK_TIME);
+	}
+	//rwlock.Unlock(&ti->lThreadLock);
+	LOGDT("Write Thread %i (%d) Completed.", ti->nThread, ti->hThread);
 	return 0;
 }
 
@@ -172,13 +179,12 @@ int _tmain(int argc, _TCHAR* argv[])
 					::TerminateThread(threads[i].hThread, 0);
 					::CloseHandle(threads[i].hThread);
 					threads[i].hThread = NULL;
-					LOGDT("Thread %i Terminated. Unlocking...", i+1);
 #ifndef TEST_RW_LOCK
 					lock.Unlock(&threads[i].lThreadLock);
 #else //ifdef TEST_RW_LOCK
 					rwlock.Unlock(&threads[i].lThreadLock);
 #endif
-					LOGDT("Thread %i Terminated. Read/Write Unlocked.", i+1);
+					LOGDT("Thread %i Terminated. Lock released.", i+1);
 					//n--;
 					break;
 				}

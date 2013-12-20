@@ -68,4 +68,26 @@ public:
 	static void OutputDebugLocks();
 };
 
+class VReadLockPtr
+{
+private:
+	VRWLock * m_pLock;
+	volatile LONG * m_lpThreadLock;
+
+public:
+	VReadLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock = NULL);
+	~VReadLockPtr();
+};
+
+class VWriteLockPtr
+{
+private:
+	VRWLock * m_pLock;
+	volatile LONG * m_lpThreadLock;
+
+public:
+	VWriteLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock = NULL);
+	~VWriteLockPtr();
+};
+
 #endif //V_RW_LOCK_H_

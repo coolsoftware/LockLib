@@ -60,4 +60,15 @@ public:
 	static void OutputDebugLocks();
 };
 
+class VLockPtr
+{
+private:
+	VLock * m_pLock;
+	volatile LONG * m_lpThreadLock;
+
+public:
+	VLockPtr(VLock * pLock, int lPosition, volatile LONG * lpThreadLock = NULL);
+	~VLockPtr();
+};
+
 #endif //V_LOCK_H_

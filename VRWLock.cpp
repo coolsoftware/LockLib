@@ -339,3 +339,35 @@ void VRWLock::OutputDebugLocks()
 	LeaveCriticalSection(&g_csRWLocks);
 #endif
 }
+
+VReadLockPtr::VReadLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
+	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
+{
+#ifdef _DEBUG
+	_ASSERT(m_pLock != NULL);
+#endif
+	if (!m_pLock) return;
+	m_pLock->LockRead(lPosition, m_lpThreadLock);
+}
+
+VReadLockPtr::~VReadLockPtr()
+{
+	if (!m_pLock) return;
+	m_pLock->Unlock(m_lpThreadLock);
+}
+
+VWriteLockPtr::VWriteLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
+	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
+{
+#ifdef _DEBUG
+	_ASSERT(m_pLock != NULL);
+#endif
+	if (!m_pLock) return;
+	m_pLock->LockWrite(lPosition, m_lpThreadLock);
+}
+
+VWriteLockPtr::~VWriteLockPtr()
+{
+	if (!m_pLock) return;
+	m_pLock->Unlock(m_lpThreadLock);
+}

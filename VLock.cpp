@@ -186,3 +186,19 @@ void VLock::OutputDebugLocks()
 	LeaveCriticalSection(&g_csLocks);
 #endif
 }
+
+VLockPtr::VLockPtr(VLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
+	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
+{
+#ifdef _DEBUG
+	_ASSERT(m_pLock != NULL);
+#endif
+	if (!m_pLock) return;
+	m_pLock->Lock(lPosition, m_lpThreadLock);
+}
+
+VLockPtr::~VLockPtr()
+{
+	if (!m_pLock) return;
+	m_pLock->Unlock(m_lpThreadLock);
+}
