@@ -83,6 +83,7 @@
     <ClInclude Include="VLog.h" />
     <ClInclude Include="VRWLock.h" />
     <ClInclude Include="VTime.h" />
+    <ClInclude Include="VUncopyable.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp" />

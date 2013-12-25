@@ -16,6 +16,7 @@
 #define V_LOCK_H_
 
 #include <Windows.h>
+#include "VUncopyable.h"
 
 #ifdef _DEBUG
 #define DEBUG_LOCK
@@ -34,7 +35,7 @@ struct VLockItem
 
 #endif
 
-class VLock
+class VLock : private VUncopyable
 {
 private:
 	CRITICAL_SECTION m_csLock;
@@ -60,7 +61,7 @@ public:
 	static void OutputDebugLocks();
 };
 
-class VLockPtr
+class VLockPtr : private VUncopyable
 {
 private:
 	VLock * m_pLock;

@@ -39,6 +39,9 @@
     <ClInclude Include="VRWLock.h">
       <Filter>Common</Filter>
     </ClInclude>
+    <ClInclude Include="VUncopyable.h">
+      <Filter>Common</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">

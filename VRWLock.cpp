@@ -44,7 +44,7 @@ VRWLock::VRWLock(LONG lMaxReaders, DWORD dwSpinCount, DWORD dwTimeout)
 		InitializeCriticalSection(&g_csRWLocks);
 	}
 	EnterCriticalSection(&g_csRWLocks);
-	__try
+	try
 	{
 		m_lockItem->m_pLock = this;
 		m_lockItem->m_nextLock = NULL;
@@ -52,7 +52,7 @@ VRWLock::VRWLock(LONG lMaxReaders, DWORD dwSpinCount, DWORD dwTimeout)
 		if (g_lastRWLock) g_lastRWLock->m_nextLock = m_lockItem;
 		g_lastRWLock = m_lockItem;
 	}
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	catch (...)
 	{
 		DEBUGOUTPUT("[VRWLock] Error 1!\n");
 	}
@@ -65,7 +65,7 @@ VRWLock::~VRWLock()
 {
 #ifdef DEBUG_LOCK
 	EnterCriticalSection(&g_csRWLocks);
-	__try
+	try
 	{
 		if (m_lockItem != NULL)
 		{
@@ -77,7 +77,7 @@ VRWLock::~VRWLock()
 				m_lockItem->m_prevLock->m_nextLock = m_lockItem->m_nextLock;
 		}
 	}
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	catch (...)
 	{
 		DEBUGOUTPUT("[VRWLock] Error 2!\n");
 	}
@@ -289,7 +289,7 @@ void VRWLock::OutputDebugLocks()
 		if (pLock)
 		{
 			n++;
-			__try
+			try
 			{
 				int wl = pLock->m_lWaitingLock;
 				int rl = pLock->m_lCounter;
@@ -325,7 +325,7 @@ void VRWLock::OutputDebugLocks()
 					DEBUGOUTPUT("RW Lock %i (0x%x): %i LOCKS FOR READ (last at %i), WAITING %i\n", n, pLock, rl, rp, wl);
 				}
 			}
-			__except(EXCEPTION_EXECUTE_HANDLER)
+			catch (...)
 			{
 				DEBUGOUTPUT("[VRWLock] Error 3!\n");
 			}

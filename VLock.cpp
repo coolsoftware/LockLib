@@ -39,7 +39,7 @@ VLock::VLock()
 		InitializeCriticalSection(&g_csLocks);
 	}
 	EnterCriticalSection(&g_csLocks);
-	__try
+	try
 	{
 		m_lockItem->m_pLock = this;
 		m_lockItem->m_nextLock = NULL;
@@ -47,7 +47,7 @@ VLock::VLock()
 		if (g_lastLock) g_lastLock->m_nextLock = m_lockItem;
 		g_lastLock = m_lockItem;
 	}
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	catch (...)
 	{
 		DEBUGOUTPUT("[VLock] Error 1!\n");
 	}
@@ -60,7 +60,7 @@ VLock::~VLock()
 {
 #ifdef DEBUG_LOCK
 	EnterCriticalSection(&g_csLocks);
-	__try
+	try
 	{
 		if (m_lockItem != NULL)
 		{
@@ -72,7 +72,7 @@ VLock::~VLock()
 				m_lockItem->m_prevLock->m_nextLock = m_lockItem->m_nextLock;
 		}
 	}
-	__except(EXCEPTION_EXECUTE_HANDLER)
+	catch (...)
 	{
 		DEBUGOUTPUT("[VLock] Error 2!\n");
 	}
@@ -148,7 +148,7 @@ void VLock::OutputDebugLocks()
 		if (pLock)
 		{
 			n++;
-			__try
+			try
 			{
 				int wl = pLock->m_lWaitingLock;
 				int lp = pLock->m_lLockPosition;
@@ -172,7 +172,7 @@ void VLock::OutputDebugLocks()
 					DEBUGOUTPUT("Lock %i (0x%x): LOCKED at %i\n", n, pLock, lp);
 				}
 			}
-			__except(EXCEPTION_EXECUTE_HANDLER)
+			catch (...)
 			{
 				DEBUGOUTPUT("[VLock] Error 3!\n");
 			}

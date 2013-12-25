@@ -41,7 +41,55 @@ struct ThreadInfo
 	int nThread;
 	HANDLE hThread;
 };
+/*
+VLock lock;
 
+unsigned int __stdcall LockThreadProc(void * lpParam)
+{
+	lock.Lock(1, reinterpret_cast<volatile LONG *>(lpParam)); //lock resource
+
+	//do something here
+
+	lock.Unlock( reinterpret_cast<volatile LONG *>(lpParam)); //unlock resource
+
+	//contuinue working
+
+	return 0;
+}
+
+unsigned int __stdcall LockPtrThreadProc(void * lpParam)
+{
+	{
+		VLockPtr lockptr(&lock, 1, reinterpret_cast<volatile LONG *>(lpParam)); //lock resource
+
+		//do something here
+
+	} //unlock will be done here
+
+	//contuinue working
+
+	return 0;
+}
+
+void main1(int argc, char* argv[])
+{
+	volatile LONG lThreadLock = 0; //initialize with zero
+	//create thread
+	HANDLE hThread = (HANDLE)_beginthreadex(NULL, 0, LockThreadProc, (void*)&lThreadLock, CREATE_SUSPENDED, NULL);
+	//start thread
+	::ResumeThread(hThread);
+	//wait for 5 seconds
+	if(::WaitForSingleObject(hThread, 5000) == WAIT_TIMEOUT)
+	{
+		//terminate thread
+		::TerminateThread(hThread, 0);
+		//release lock
+		lock.Unlock(&lThreadLock);
+	}
+	//close thread handle
+	::CloseHandle(hThread);
+}
+*/
 //#define TEST_LOCK_TIME	INFINITE
 #define TEST_LOCK_TIME	2000
 
@@ -121,8 +169,22 @@ const int cTestThreads = 10;
 
 struct ThreadInfo threads[cTestThreads] = { 0 };
 
+#ifdef TEST_RW_LOCK
+void RWFunc(const VRWLock&)
+{
+}
+#endif
+
 int _tmain(int argc, _TCHAR* argv[])
 {
+#ifdef TEST_RW_LOCK
+	{
+		VRWLock rwlock1;
+		//VRWLock rwlock2 = rwlock1;
+		//RWFunc(1);
+	}
+#endif
+
 	VLog::Setup((const _TCHAR*)NULL, FALSE, FALSE);
 
 	hExitEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);

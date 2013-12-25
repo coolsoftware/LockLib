@@ -16,6 +16,7 @@
 #define V_RW_LOCK_H_
 
 #include <Windows.h>
+#include "VUncopyable.h"
 
 #ifdef _DEBUG
 #define DEBUG_LOCK
@@ -34,7 +35,7 @@ struct VRWLockItem
 
 #endif
 
-class VRWLock
+class VRWLock : private VUncopyable
 {
 private:
 	LONG m_lMaxReaders;
@@ -57,7 +58,7 @@ private:
 	void WaitForUnlock();
 
 public:
-	VRWLock(LONG lMaxReaders = 65535, DWORD dwSpinCount = 1000, DWORD dwTimeout = 5);
+	explicit VRWLock(LONG lMaxReaders = 65535, DWORD dwSpinCount = 1000, DWORD dwTimeout = 5);
 	~VRWLock();
 
 	void LockRead(int lPosition, volatile LONG * lpThreadLock = NULL);
@@ -68,7 +69,7 @@ public:
 	static void OutputDebugLocks();
 };
 
-class VReadLockPtr
+class VReadLockPtr : private VUncopyable
 {
 private:
 	VRWLock * m_pLock;
@@ -79,7 +80,7 @@ public:
 	~VReadLockPtr();
 };
 
-class VWriteLockPtr
+class VWriteLockPtr : private VUncopyable
 {
 private:
 	VRWLock * m_pLock;
