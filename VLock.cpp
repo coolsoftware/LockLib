@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 CoolSoftware. http://blog.coolsoftware.ru/
+// Copyright 2013-14 CoolSoftware. http://blog.coolsoftware.ru/
 //
 // Exclusive lock.
 //
@@ -190,9 +190,6 @@ void VLock::OutputDebugLocks()
 VLockPtr::VLockPtr(VLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
 	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
 {
-#ifdef _DEBUG
-	_ASSERT(m_pLock != NULL);
-#endif
 	if (!m_pLock) return;
 	m_pLock->Lock(lPosition, m_lpThreadLock);
 }

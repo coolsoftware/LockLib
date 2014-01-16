@@ -1,8 +1,8 @@
 //////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 CoolSoftware. http://blog.coolsoftware.ru/
+// Copyright 2013-14 CoolSoftware. http://blog.coolsoftware.ru/
 //
-// Single-write-multiple-read.
+// Uncopyable class declaration
 //
 // You can freely use this program and code for your needs.
 //

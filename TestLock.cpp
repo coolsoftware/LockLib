@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 CoolSoftware. http://blog.coolsoftware.ru/
+// Copyright 2013-14 CoolSoftware. http://blog.coolsoftware.ru/
 //
 // Test locks.
 //
@@ -93,7 +93,7 @@ void main1(int argc, char* argv[])
 //#define TEST_LOCK_TIME	INFINITE
 #define TEST_LOCK_TIME	2000
 
-#define TEST_RW_LOCK
+//#define TEST_RW_LOCK
 
 #ifndef TEST_RW_LOCK
 
@@ -168,23 +168,23 @@ unsigned int __stdcall TestWriteLockThreadProc(void * lpParam)
 const int cTestThreads = 10;
 
 struct ThreadInfo threads[cTestThreads] = { 0 };
-
-#ifdef TEST_RW_LOCK
+/*
 void RWFunc(const VRWLock&)
 {
+	//do something here
 }
-#endif
-
+*/
 int _tmain(int argc, _TCHAR* argv[])
 {
-#ifdef TEST_RW_LOCK
+/*
 	{
+		VLock lock1;
+		VLock lock2 = lock1; //ошибка!
 		VRWLock rwlock1;
-		//VRWLock rwlock2 = rwlock1;
-		//RWFunc(1);
+		VRWLock rwlock2 = rwlock1; //ошибка!
+		RWFunc(1); //ошибка!
 	}
-#endif
-
+*/
 	VLog::Setup((const _TCHAR*)NULL, FALSE, FALSE);
 
 	hExitEvent = ::CreateEvent(NULL, TRUE, FALSE, NULL);

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////
 //
-// Copyright 2013 CoolSoftware. http://blog.coolsoftware.ru/
+// Copyright 2013-14 CoolSoftware. http://blog.coolsoftware.ru/
 //
 // Single-write-multiple-read.
 //
@@ -343,9 +343,6 @@ void VRWLock::OutputDebugLocks()
 VReadLockPtr::VReadLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
 	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
 {
-#ifdef _DEBUG
-	_ASSERT(m_pLock != NULL);
-#endif
 	if (!m_pLock) return;
 	m_pLock->LockRead(lPosition, m_lpThreadLock);
 }
@@ -359,9 +356,6 @@ VReadLockPtr::~VReadLockPtr()
 VWriteLockPtr::VWriteLockPtr(VRWLock * pLock, int lPosition, volatile LONG * lpThreadLock) 
 	: m_pLock(pLock), m_lpThreadLock(lpThreadLock)
 {
-#ifdef _DEBUG
-	_ASSERT(m_pLock != NULL);
-#endif
 	if (!m_pLock) return;
 	m_pLock->LockWrite(lPosition, m_lpThreadLock);
 }
